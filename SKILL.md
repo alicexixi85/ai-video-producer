@@ -4,6 +4,7 @@ description: |
   AI 短视频全流程制作：用户只说一句"做一支XX视频"，自动完成分镜、Veo 提示词、Flow 镜头生成、验片重生、TTS 旁白、BGM、Remotion 组装渲染，交付可直接发布的 9:16 竖屏成片。
   触发词：「做一支视频」「做条XX视频」「把这篇图文转成视频」「EP2 开工」。
   不在一般性视频问题上自动触发（如"视频怎么做""Veo 怎么用"只回答不执行）。
+  成片验收通过后默认经 YouTube Data API 自动发布（Phase 8），用户零操作。
 ---
 
 # AI 短视频制作 · 全流程 Skill
@@ -58,6 +59,16 @@ description: |
 3. **升级提示词**：用 Gemini（3.1 Pro 级别）按官方指南把初版提示词升级为 v3 版（见 `examples/ep1-shot-prompts.md` 的 v3 范例）。
 4. **废弃路线**：旧 FFmpeg/PPT 式拼接路线已废弃，不用。
 
+### Phase 1.5: Shorts 智能带标题封面（antigravity 验收建议，EP2 起执行）
+
+**为什么**：YouTube Shorts 不能像长视频那样单独上传静态封面，封面直接从视频帧里抓（通常是第一帧）。
+首帧没有大字标题 → 信息流里点击率和停留率大打折扣。
+
+1. **Gemini 自闭环写封面提示词**：把分镜脚本/主题丢进 Gemini，让它提炼最强网感、8~12 字的抓眼球大标题，
+   并自主写出 Imagen 提示词（要求：竖屏 9:16、画面留白或居中/上方粗体 3D 浮雕或高对比文字排版、色彩高饱和、主体突出）。
+2. **生图＋验片**：用 Gemini/Imagen 生成封面图，检查字迹清晰无乱码、视觉钩子强。字乱了就重生，不将就。
+3. 封面图进入 Phase 6 融合成片（见 Phase 6 第 5 条）。
+
 ### Phase 2: Flow 生成（全自动浏览器路线）
 
 1. 打开 Flow 项目（用户 Google 账号已登录），用 **"页面搜索框中转复制→粘贴到 Flow 编辑器"** 的方式填长提示词（直接粘贴长文本到 Flow 编辑器不稳定，见 `references/flow-auto-method.md`）。
@@ -99,6 +110,8 @@ description: |
    ```
    旁白出现时 BGM 必须变小，不是变大。
 4. 统一视觉语言：全片同一色调/LUT 倾向、同一字幕样式。
+5. **封面融合（Phase 1.5 的图）**：把带标题封面图放在 composition 最起始帧（Frame 0~15/30，约 0.5~1 秒），
+   加轻微推镜或定格瞬切过渡到 Shot 1。这样成片第一帧天然自带大标题，Shorts 抓封面时直接抓眼。
 
 ### Phase 7: 渲染＋验片＋交付
 
@@ -109,6 +122,22 @@ description: |
    - 响度：目标 -16 LUFS 左右，峰值不超 -1 dBFS；偏小就整体增益
 3. 交付：复制到 `~/workspace/your_files/`，文件名 `主题-成片_1080x1920_vN.mp4`，给用户下载链接。
 4. **"完成"只能由验收方标记**，自己只称"已交付／待验收"。
+
+### Phase 8: YouTube API 发布与核验（"做一支视频"默认包含）
+
+成片验收通过后，自动走 YouTube Data API 发布，不让用户手动上传。
+发布 SOP 以 Drive「18_YouTube负责人」岗位为准（`SKILL.md`＋`AI共享_YouTube_API使用与发布规范.md`），当契约执行：
+
+1. **备件**：`AI前沿洞察号_API上传` 工具链——`token_youtube_upload.json`（上传 scope）与 `token_youtube_manage.json`（管理 scope）
+   双 token 隔离。凭证从 Drive 镜像取，**不进代码仓库**。
+2. **频道核验门禁**（只读，100% 执行）：`channels.list` 确认 Channel ID == `UCXLnG1FnJ8G1M0t89m5cO6A`（AI前沿洞察），
+   不匹配立刻终止。财经号是另一套凭证、物理隔离，绝不发错。
+3. **上传**：`videos.insert` 断点续传；`status` 必须带 `privacyStatus: public`、
+   `containsSyntheticMedia: true`（AI 内容披露 API 直接勾选）、`selfDeclaredMadeForKids: false`。
+4. **去 AI 化检查**：标题/简介/标签零工具名（不出现 Codex、NotebookLM、Veo 等制作端工具名）；
+   全网标题禁用"金融""股票交易"等敏感词。
+5. **二次核验**：上传完用 manage token 调 `videos.list`，确认线上 Video ID、Channel ID、标题、公开状态全部匹配。
+6. **留档**：发布记录 JSON 存 18-muse，台账按 18号规范回填。
 
 ---
 
@@ -165,3 +194,7 @@ ai-video-producer/
 
 > 本 Skill 由 [女娲 · Skill造人术](https://github.com/alchaincyf/nuwa-skill) 的写作方法沉淀，
 > 流程经《Muse 图文转视频 EP1》（2026-10-01）实战验证：5 条 Veo 3.1 Lite 镜头一次通过、50 点成片。
+>
+> 修订记录：
+> - 2026-10-02：antigravity 验收（9.5/10）后修订——新增 Phase 1.5 Shorts 带标题封面、Phase 6 封面融合、
+>   Phase 8 YouTube API 自动发布；render.sh 改跨平台浏览器内核探测。
