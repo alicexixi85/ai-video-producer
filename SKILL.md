@@ -4,7 +4,7 @@ description: |
   AI 短视频全流程制作：用户只说一句"做一支XX视频"，自动完成分镜、Veo 提示词、Flow 镜头生成、验片重生、TTS 旁白、BGM、Remotion 组装渲染，交付可直接发布的 9:16 竖屏成片。
   触发词：「做一支视频」「做条XX视频」「把这篇图文转成视频」「EP2 开工」。
   不在一般性视频问题上自动触发（如"视频怎么做""Veo 怎么用"只回答不执行）。
-  成片验收通过后默认经 YouTube Data API 自动发布（Phase 8），用户零操作。
+  成片通过验收后，仅在操作者明确授权的情况下执行平台发布（Phase 8）。
 ---
 
 # AI 短视频制作 · 全流程 Skill
@@ -123,21 +123,15 @@ description: |
 3. 交付：复制到 `~/workspace/your_files/`，文件名 `主题-成片_1080x1920_vN.mp4`，给用户下载链接。
 4. **"完成"只能由验收方标记**，自己只称"已交付／待验收"。
 
-### Phase 8: YouTube API 发布与核验（"做一支视频"默认包含）
+### Phase 8: 平台发布与核验（须明确授权）
 
-成片验收通过后，自动走 YouTube Data API 发布，不让用户手动上传。
-发布 SOP 以 Drive「18_YouTube负责人」岗位为准（`SKILL.md`＋`AI共享_YouTube_API使用与发布规范.md`），当契约执行：
+此阶段为可选项。成片验收通过后，必须先核实操作者已授权目标频道、视频、发布时间、隐私状态及平台所需的 AI 内容披露方式，方可执行上传。
 
-1. **备件**：`AI前沿洞察号_API上传` 工具链——`token_youtube_upload.json`（上传 scope）与 `token_youtube_manage.json`（管理 scope）
-   双 token 隔离。凭证从 Drive 镜像取，**不进代码仓库**。
-2. **频道核验门禁**（只读，100% 执行）：`channels.list` 确认 Channel ID == `UCXLnG1FnJ8G1M0t89m5cO6A`（AI前沿洞察），
-   不匹配立刻终止。财经号是另一套凭证、物理隔离，绝不发错。
-3. **上传**：`videos.insert` 断点续传；`status` 必须带 `privacyStatus: public`、
-   `containsSyntheticMedia: true`（AI 内容披露 API 直接勾选）、`selfDeclaredMadeForKids: false`。
-4. **去 AI 化检查**：标题/简介/标签零工具名（不出现 Codex、NotebookLM、Veo 等制作端工具名）；
-   全网标题禁用"金融""股票交易"等敏感词。
-5. **二次核验**：上传完用 manage token 调 `videos.list`，确认线上 Video ID、Channel ID、标题、公开状态全部匹配。
-6. **留档**：发布记录 JSON 存 18-muse，台账按 18号规范回填。
+1. **授权与身份：** 使用运行环境中经授权的凭据，不得在公开仓库保存任何令牌、频道 ID、内部文件路径或客户信息。
+2. **发布：** 调用平台当前官方接口。明确确认目标频道、标题、是否允许公开、合成内容披露及儿童内容设置。
+3. **验证：** 使用返回的视频 ID 检查实际频道、标题、隐私状态和播放链接。未经核验不得标记发布成功。
+4. **留档：** 将授权记录、运行日志和凭据引用仅存放于合规的内部系统。公开仓库只保留脱敏示例。
+
 
 ---
 

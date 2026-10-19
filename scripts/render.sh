@@ -4,7 +4,7 @@
 # （Remotion 自动下载常超时。浏览器内核路径按下方优先级自动探测）
 #
 # 用法：bash render.sh <项目目录> <compositionID> <输出文件名>
-# 例：bash render.sh ~/workspace/video/muse-ep1-remotion MuseEP1 out/muse-ep1-v2.mp4
+# 例：bash render.sh ./my-remotion-project MyComposition out/video.mp4
 #
 # 跨平台说明（antigravity 验收建议）：
 #   浏览器内核按以下优先级定位——
@@ -28,7 +28,6 @@ detect_browser() {
     "/usr/bin/chromium" \
     "/usr/bin/chromium-browser" \
     "$HOME/workspace/video/chrome-shell/chrome-headless-shell-linux64/chrome-headless-shell" \
-    "/home/hatch/workspace/video/chrome-shell/chrome-headless-shell-linux64/chrome-headless-shell" \
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
     "/c/Program Files/Google/Chrome/Application/chrome.exe" \
     "/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" \
