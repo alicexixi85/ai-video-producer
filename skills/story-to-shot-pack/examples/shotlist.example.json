@@ -1,0 +1,77 @@
+{
+  "target_duration_s": 8,
+  "aspect_ratio": "9:16",
+  "fps": 30,
+  "continuity": {
+    "cast": [
+      {
+        "cast_id": "lead",
+        "fixed_look": "Adult with short dark hair, blue coat"
+      }
+    ],
+    "clues": [
+      {
+        "clue_id": "receipt",
+        "first_shot": "S02",
+        "rule": "Receipt only provides its printed date"
+      }
+    ]
+  },
+  "shots": [
+    {
+      "id": "S01",
+      "scene": "ST01",
+      "start_s": 0,
+      "duration_s": 3,
+      "start_frame": 0,
+      "end_frame": 90,
+      "cast_ids": [
+        "lead"
+      ],
+      "framing": "medium",
+      "action": "An adult opens an envelope at a wooden table.",
+      "camera": "locked",
+      "light": "soft window light",
+      "dialogue": "",
+      "image_prompt": "Blue coat, wooden table, soft window light",
+      "video_prompt": "Hand opens envelope once, locked camera",
+      "audio_cues": [
+        {
+          "start_s": 0,
+          "end_s": 3,
+          "text": "paper rustle"
+        }
+      ],
+      "caption": ""
+    },
+    {
+      "id": "S02",
+      "scene": "ST01",
+      "start_s": 3,
+      "duration_s": 5,
+      "start_frame": 90,
+      "end_frame": 240,
+      "cast_ids": [
+        "lead"
+      ],
+      "framing": "close-up",
+      "action": "The adult turns a receipt over, pointing at the date.",
+      "camera": "slow push",
+      "light": "soft window light",
+      "dialogue": "This says tomorrow.",
+      "image_prompt": "Close-up, paper receipt, hand, natural light",
+      "video_prompt": "Turn receipt and hold date legible, slow push-in",
+      "audio_cues": [
+        {
+          "start_s": 3,
+          "end_s": 8,
+          "text": "room tone"
+        }
+      ],
+      "caption": "This says tomorrow."
+    }
+  ],
+  "assumptions": [
+    "Fictional teaching example only"
+  ]
+}
