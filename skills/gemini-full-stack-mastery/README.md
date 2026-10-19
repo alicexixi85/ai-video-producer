@@ -1,8 +1,8 @@
-# Gemini Full-Stack Mastery — public v1 candidate
+# Gemini Full-Stack Mastery — public v1
 
 A practical Agent Skill covering Gemini web, AI Studio, Flow and NotebookLM. It documents image, video, music, speech, quota reading, export validation and troubleshooting.
 
-**State:** privacy-reviewed draft awaiting independent release QA. Not official Google documentation. Generated from a dated 2026-10-17 internal v1 source and revised for general public use.
+**State:** public generalized edition, independently privacy-reviewed for release on 2026-10-19. Not official Google documentation. Generated from a dated 2026-10-17 internal v1 source and revised for general public use.
 
 ## Install
 
